@@ -45,7 +45,7 @@ export default function Home() {
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
               {sampleCars.map((car) => (
                 <CarCard
-                  key={car.id}
+                  key={car.slug}
                   title={car.title}
                   slug={car.slug}
                   price={car.price}
