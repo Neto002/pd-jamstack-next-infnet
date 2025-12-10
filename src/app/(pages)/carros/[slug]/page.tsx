@@ -1,5 +1,4 @@
-import { getCarrosMatter } from "@/app/services/carro";
-import { marked } from "marked";
+import { getCarrosMatter, convertMarkdownToHtml } from "@/app/services/carro";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 
@@ -24,7 +23,8 @@ const CarPage = async ({ params }: { params: { slug: string } }) => {
   const car = cars.find((c) => c.data.slug === slug);
   if (!car) return notFound();
 
-  const contentHtml = marked.parse(car.content);
+  // Converter markdown para HTML usando remark
+  const contentHtml = await convertMarkdownToHtml(car.content);
 
   return (
     <div className="min-h-screen items-center justify-center flex flex-col">

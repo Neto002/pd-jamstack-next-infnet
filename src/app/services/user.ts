@@ -1,23 +1,39 @@
 "use server";
 
-export const login = async (formData) => {
+import matter from "gray-matter";
+import { remark } from "remark";
+
+export const login = async (prevState, formData) => {
+  console.log("Form Data Recebido no Servidor:", formData);
+  console.log("Estado Anterior:", prevState);
   const email = formData.get("email");
   const password = formData.get("password");
 
-  // Simulate authentication logic
   if (email === "" || password === "") {
     throw new Error("Email e senha são obrigatórios.");
   }
 
-  // Here you would typically check the credentials against a database
   if (email === "antonio@neto.com" && password === "senha123") {
+    console.log("Login bem-sucedido!");
     return {
       success: true,
       message: "Login bem-sucedido!",
       email,
-      password: "",
+      password,
     };
   } else {
     throw new Error("Credenciais inválidas.");
   }
 };
+
+export async function convertMarkdownToHtml(markdownContent: string) {
+  const matterResult = matter(markdownContent);
+  const processedContent = await remark()
+    .use(html)
+    .process(matterResult.content);
+  const contentHtml = processedContent.toString();
+
+  return {
+    contentHtml,
+  };
+}

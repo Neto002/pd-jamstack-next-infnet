@@ -3,6 +3,8 @@ import { Car } from "../interfaces/Car";
 import fs from "fs";
 import path from "path";
 import matter from "gray-matter";
+import { remark } from "remark";
+import html from "remark-html";
 
 interface CarMatter {
   content: string;
@@ -97,3 +99,10 @@ export const getCarros = (): Car[] => {
   const carrosMatter = getSortedData();
   return carrosMatter.map((car) => car.data);
 };
+
+export async function convertMarkdownToHtml(markdownContent: string) {
+  const processedContent = await remark().use(html).process(markdownContent);
+  const contentHtml = processedContent.toString();
+
+  return contentHtml;
+}

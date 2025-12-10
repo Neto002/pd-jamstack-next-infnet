@@ -2,10 +2,10 @@
 
 import { login } from "@/app/services/user";
 import Link from "next/link";
-import { useFormState } from "react-dom";
+import { useActionState } from "react";
 
 const LoginPage = () => {
-  const [state, formAction] = useFormState(login, {});
+  const [state, formAction] = useActionState(login, {});
   return (
     <div className="min-h-screen flex flex-col bg-gray-50">
       <main className="flex-1 flex items-center justify-center px-4 py-12">
@@ -14,7 +14,7 @@ const LoginPage = () => {
             Entrar na Conta
           </h1>
 
-          <form className="space-y-6" action={formAction} method="post">
+          <form className="space-y-6" action={formAction}>
             <div>
               <label
                 htmlFor="inline-email"
