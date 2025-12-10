@@ -57,7 +57,7 @@ const LoginPage = () => {
             </button>
           </form>
 
-          <div className="mt-6 text-center text-sm text-gray-600">
+          {/* <div className="mt-6 text-center text-sm text-gray-600">
             Não tem conta?{" "}
             <Link
               href="/registro"
@@ -65,7 +65,7 @@ const LoginPage = () => {
             >
               Cadastre-se
             </Link>
-          </div>
+          </div> */}
         </div>
       </main>
     </div>
