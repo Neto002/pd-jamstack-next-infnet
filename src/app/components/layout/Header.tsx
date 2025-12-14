@@ -1,10 +1,31 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
+import LogoutButton from "./LogoutButton";
 
 const Header: React.FC = () => {
   const [open, setOpen] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    // Verificar status de autenticação ao montar
+    const checkAuthStatus = async () => {
+      try {
+        const response = await fetch("/api/auth-status");
+        const data = await response.json();
+        setIsLoggedIn(data.isLoggedIn);
+      } catch (err) {
+        console.error("Erro ao verificar status de autenticação:", err);
+        setIsLoggedIn(false);
+      }
+    };
+    checkAuthStatus();
+
+    // Configurar listener para mudanças de autenticação
+    window.addEventListener("auth-changed", checkAuthStatus);
+    return () => window.removeEventListener("auth-changed", checkAuthStatus);
+  }, []);
 
   return (
     <header className="bg-gray-800 py-4">
@@ -17,7 +38,7 @@ const Header: React.FC = () => {
         </Link>
 
         {/* Desktop links */}
-        <div className="hidden md:flex gap-8">
+        <div className="hidden md:flex gap-8 items-center">
           <Link href="/" className="text-white no-underline hover:underline">
             Home
           </Link>
@@ -39,12 +60,16 @@ const Header: React.FC = () => {
           >
             Contato
           </Link>
-          <Link
-            href="/login"
-            className="text-white no-underline hover:underline"
-          >
-            Login
-          </Link>
+          {isLoggedIn ? (
+            <LogoutButton />
+          ) : (
+            <Link
+              href="/login"
+              className="text-white no-underline hover:underline"
+            >
+              Login
+            </Link>
+          )}
         </div>
 
         {/* Mobile menu button */}
@@ -121,13 +146,19 @@ const Header: React.FC = () => {
             >
               Contato
             </Link>
-            <Link
-              href="/login"
-              className="text-white no-underline hover:underline"
-              onClick={() => setOpen(false)}
-            >
-              Login
-            </Link>
+            {isLoggedIn ? (
+              <div onClick={() => setOpen(false)}>
+                <LogoutButton />
+              </div>
+            ) : (
+              <Link
+                href="/login"
+                className="text-white no-underline hover:underline"
+                onClick={() => setOpen(false)}
+              >
+                Login
+              </Link>
+            )}
           </div>
         </div>
       )}

@@ -1,39 +1,31 @@
 "use server";
 
-import matter from "gray-matter";
-import { remark } from "remark";
-
-export const login = async (prevState, formData) => {
-  console.log("Form Data Recebido no Servidor:", formData);
-  console.log("Estado Anterior:", prevState);
-  const email = formData.get("email");
-  const password = formData.get("password");
-
-  if (email === "" || password === "") {
-    throw new Error("Email e senha são obrigatórios.");
-  }
-
-  if (email === "antonio@neto.com" && password === "senha123") {
-    console.log("Login bem-sucedido!");
-    return {
-      success: true,
-      message: "Login bem-sucedido!",
-      email,
-      password,
-    };
-  } else {
-    throw new Error("Credenciais inválidas.");
-  }
-};
-
-export async function convertMarkdownToHtml(markdownContent: string) {
-  const matterResult = matter(markdownContent);
-  const processedContent = await remark()
-    .use(html)
-    .process(matterResult.content);
-  const contentHtml = processedContent.toString();
-
-  return {
-    contentHtml,
-  };
+interface AuthState {
+  success: boolean;
+  message: string;
+  email?: string;
+  password?: string;
+  name?: string;
 }
+
+export const signup = async (
+  prevState: AuthState,
+  formData: FormData
+): Promise<AuthState> => {
+  const name = formData.get("name") as string;
+  const email = formData.get("email") as string;
+  const password = formData.get("password") as string;
+
+  if (name === "" || email === "" || password === "") {
+    throw new Error("Nome, email e senha são obrigatórios.");
+  }
+
+  console.log("Registro bem-sucedido!");
+  return {
+    success: true,
+    message: "Registro bem-sucedido!",
+    name,
+    email,
+    password,
+  };
+};

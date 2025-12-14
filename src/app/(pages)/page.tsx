@@ -5,7 +5,7 @@ import { getCarros } from "../services/carro";
 
 const sampleCars: Car[] = getCarros().slice(0, 3);
 
-export default function Home() {
+export default async function Home() {
   return (
     <div className="min-h-screen flex flex-col">
       <main className="flex-1">

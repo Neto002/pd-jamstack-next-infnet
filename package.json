@@ -9,6 +9,13 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@graphql-yoga/node": "^3.9.1",
+    "dotenv": "^17.2.3",
+    "firebase": "^12.6.0",
+    "firebase-admin": "^13.6.0",
+    "graphql": "^16.12.0",
+    "graphql-request": "^7.4.0",
+    "graphql-yoga": "^5.17.1",
     "gray-matter": "^4.0.3",
     "next": "16.0.3",
     "react": "19.2.0",

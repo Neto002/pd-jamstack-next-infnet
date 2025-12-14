@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
-const LoginPage = () => {
+const SignUpPage = () => {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -18,7 +18,7 @@ const LoginPage = () => {
     const email = formData.get("email") as string;
     const password = formData.get("password") as string;
 
-    const response = await fetch("/api/login", {
+    const response = await fetch("/api/signup", {
       method: "POST",
       body: JSON.stringify({ email, password }),
       headers: {
@@ -27,10 +27,8 @@ const LoginPage = () => {
     });
 
     if (response.ok) {
-      // Disparar evento de mudança de autenticação
-      window.dispatchEvent(new Event("auth-changed"));
-
-      router.push("/");
+      alert("Cadastro realizado com sucesso! Faça o login.");
+      router.push("/login");
     } else {
       const data = await response.json();
       setError(data.error || "Erro ao efetuar login.");
@@ -43,7 +41,7 @@ const LoginPage = () => {
       <main className="flex-1 flex items-center justify-center px-4 py-12">
         <div className="w-full max-w-md bg-white rounded-lg shadow-md p-8">
           <h1 className="text-2xl font-bold text-center text-gray-800 mb-8">
-            Entrar na Conta
+            Criar Conta
           </h1>
 
           <form onSubmit={handleSubmit} className="space-y-6">
@@ -79,17 +77,17 @@ const LoginPage = () => {
               disabled={loading}
               className="w-full bg-emerald-500 hover:bg-emerald-600 disabled:bg-gray-400 text-white font-semibold py-2 rounded-md transition"
             >
-              {loading ? "Entrando..." : "Entrar"}
+              {loading ? "Carregando..." : "Criar Conta"}
             </button>
           </form>
 
           <div className="mt-6 text-center text-sm text-gray-600">
-            Não tem conta?{" "}
+            Já possui conta?{" "}
             <Link
-              href="/registro"
+              href="/login"
               className="text-emerald-500 font-medium hover:underline"
             >
-              Cadastre-se
+              Faça o Login
             </Link>
           </div>
         </div>
@@ -98,4 +96,4 @@ const LoginPage = () => {
   );
 };
 
-export default LoginPage;
+export default SignUpPage;
