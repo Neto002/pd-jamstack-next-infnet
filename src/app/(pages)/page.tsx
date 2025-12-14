@@ -2,8 +2,17 @@ import Link from "next/link";
 import CarCard from "../components/CarCard";
 import { GraphQLClient } from "graphql-request";
 import { Car } from "../interfaces/Car";
+import { headers } from "next/headers";
 
-export const client = new GraphQLClient(`${process.env.BASE_URL}/api/cars`);
+export async function getBaseUrl() {
+  const headersList = await headers();
+  const protocol = headersList.get("x-forwarded-proto") ?? "http";
+  const host = headersList.get("host");
+
+  return `${protocol}://${host}`;
+}
+
+export const client = new GraphQLClient(`${await getBaseUrl()}/api/cars`);
 
 export default async function Home() {
   const query = /* GraphQL */ `
