@@ -1,5 +1,5 @@
 import CarrosView from "./view";
-import { getCarros } from "@/app/services/carro";
+import { getCarros } from "@/app/services/car";
 
 const CarrosPage: React.FC = () => {
   return <CarrosView carros={getCarros()} />;

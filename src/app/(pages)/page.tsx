@@ -1,11 +1,29 @@
 import Link from "next/link";
 import CarCard from "../components/CarCard";
+import { GraphQLClient } from "graphql-request";
 import { Car } from "../interfaces/Car";
-import { getCarros } from "../services/carro";
 
-const sampleCars: Car[] = getCarros().slice(0, 3);
+export const client = new GraphQLClient(`${process.env.BASE_URL}/api/cars`);
 
 export default async function Home() {
+  const query = /* GraphQL */ `
+    query {
+      cars {
+        title
+        slug
+        price
+        year
+        km
+        hero_image
+        hero_image_alt
+      }
+    }
+  `;
+  const data = await client.request<{ cars: Car[] }>(query);
+
+  // Selecionar alguns carros para destaque (ex: os 6 primeiros)
+  const sampleCars = data.cars.slice(0, 3);
+
   return (
     <div className="min-h-screen flex flex-col">
       <main className="flex-1">

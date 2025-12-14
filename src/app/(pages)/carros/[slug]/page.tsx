@@ -1,4 +1,4 @@
-import { getCarrosMatter, convertMarkdownToHtml } from "@/app/services/carro";
+import { getCarrosMatter, convertMarkdownToHtml } from "@/app/services/car";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 
