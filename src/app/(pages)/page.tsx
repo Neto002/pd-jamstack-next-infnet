@@ -9,6 +9,10 @@ export const revalidate = 3600;
 
 const getGraphQLUrl = () => {
   if (process.env.VERCEL_URL) {
+    console.log(
+      "Running in Vercel, using production API URL",
+      process.env.VERCEL_URL
+    );
     return `https://${process.env.VERCEL_URL}/api/cars`;
   }
   return "http://localhost:3000/api/cars";
