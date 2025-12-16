@@ -5,7 +5,7 @@ import { Car } from "../interfaces/Car";
 
 // Revalidar a página a cada 3600 segundos (1 hora)
 // Durante o build, usa dados vazios. Após deploy, revalida em background
-export const revalidate = 3600;
+export const revalidate = 30;
 
 const getGraphQLUrl = () => {
   if (process.env.VERCEL_URL) {
