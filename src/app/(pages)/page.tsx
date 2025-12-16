@@ -3,7 +3,11 @@ import CarCard from "../components/CarCard";
 import { GraphQLClient } from "graphql-request";
 import { Car } from "../interfaces/Car";
 
-export const client = new GraphQLClient(`${process.env.VERCEL_URL}/api/cars`);
+const baseUrl = process.env.VERCEL_URL
+  ? `https://${process.env.VERCEL_URL}`
+  : "http://localhost:3000";
+
+export const client = new GraphQLClient(`${baseUrl}/api/cars`);
 
 export default async function Home() {
   const query = /* GraphQL */ `
