@@ -18,22 +18,30 @@ const LoginPage = () => {
     const email = formData.get("email") as string;
     const password = formData.get("password") as string;
 
-    const response = await fetch("/api/login", {
-      method: "POST",
-      body: JSON.stringify({ email, password }),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
+    try {
+      const response = await fetch("/api/login", {
+        method: "POST",
+        body: JSON.stringify({ email, password }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
 
-    if (response.ok) {
-      // Disparar evento de mudança de autenticação
-      window.dispatchEvent(new Event("auth-changed"));
+      if (response.ok) {
+        // Disparar evento de mudança de autenticação e navegar
+        window.dispatchEvent(new Event("auth-changed"));
+        // Use replace para não manter página de login no histórico
+        router.replace("/");
+        return;
+      }
 
-      router.push("/");
-    } else {
-      const data = await response.json();
-      setError(data.error || "Erro ao efetuar login.");
+      // Se a resposta não for ok, tentar ler o JSON (pode lançar)
+      const data = await response.json().catch(() => null);
+      setError(data?.error || "Erro ao efetuar login.");
+    } catch (err) {
+      console.error("Erro no fetch /api/login:", err);
+      setError("Erro de rede. Tente novamente mais tarde.");
+    } finally {
       setLoading(false);
     }
   };
