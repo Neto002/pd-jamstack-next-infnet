@@ -3,15 +3,25 @@ import CarCard from "../components/CarCard";
 import { GraphQLClient } from "graphql-request";
 import { Car } from "../interfaces/Car";
 
-export const client = new GraphQLClient(
-  `https://${process.env.VERCEL_URL}/api/cars`,
-  {
-    headers: {
-      "x-vercel-protection-bypass":
-        process.env.VERCEL_AUTOMATION_BYPASS_SECRET || "",
-    },
+// Revalidar a página a cada 3600 segundos (1 hora)
+// Durante o build, usa dados vazios. Após deploy, revalida em background
+export const revalidate = 3600;
+
+const getGraphQLUrl = () => {
+  if (process.env.VERCEL_URL) {
+    return `https://${process.env.VERCEL_URL}/api/cars`;
   }
-);
+  return "http://localhost:3000/api/cars";
+};
+
+export const client = new GraphQLClient(getGraphQLUrl(), {
+  headers: process.env.VERCEL_AUTOMATION_BYPASS_SECRET
+    ? {
+        "x-vercel-protection-bypass":
+          process.env.VERCEL_AUTOMATION_BYPASS_SECRET,
+      }
+    : {},
+});
 
 export default async function Home() {
   const query = /* GraphQL */ `
@@ -27,10 +37,17 @@ export default async function Home() {
       }
     }
   `;
-  const data = await client.request<{ cars: Car[] }>(query);
 
-  // Selecionar alguns carros para destaque (ex: os 6 primeiros)
-  const sampleCars = data.cars.slice(0, 3);
+  let sampleCars: Car[] = [];
+
+  try {
+    const data = await client.request<{ cars: Car[] }>(query);
+    sampleCars = data.cars.slice(0, 3);
+  } catch (error) {
+    console.error("Erro ao buscar carros:", error);
+    // Usar dados vazios durante o build, conteúdo não será renderizado
+    sampleCars = [];
+  }
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -68,20 +85,28 @@ export default async function Home() {
               Veículos em Destaque
             </h2>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-              {sampleCars.map((car) => (
-                <CarCard
-                  key={car.slug}
-                  title={car.title}
-                  slug={car.slug}
-                  price={car.price}
-                  year={car.year}
-                  km={car.km}
-                  hero_image={car.hero_image || ""}
-                  hero_image_alt={car.hero_image_alt || car.title}
-                />
-              ))}
-            </div>
+            {sampleCars.length > 0 ? (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                {sampleCars.map((car) => (
+                  <CarCard
+                    key={car.slug}
+                    title={car.title}
+                    slug={car.slug}
+                    price={car.price}
+                    year={car.year}
+                    km={car.km}
+                    hero_image={car.hero_image || ""}
+                    hero_image_alt={car.hero_image_alt || car.title}
+                  />
+                ))}
+              </div>
+            ) : (
+              <div className="text-center py-12">
+                <p className="text-gray-600 text-lg">
+                  Carregando veículos em destaque...
+                </p>
+              </div>
+            )}
           </div>
         </section>
       </main>
