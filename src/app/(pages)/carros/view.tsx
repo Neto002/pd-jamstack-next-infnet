@@ -11,10 +11,6 @@ interface CarrosViewProps {
 const ITEMS_PER_PAGE = 9;
 
 const CarrosView: React.FC<CarrosViewProps> = ({ carros }) => {
-  console.log(
-    "Running in Vercel, using production API URL",
-    process.env.VERCEL_URL
-  );
   const [currentPage, setCurrentPage] = useState(1);
   const [filters, setFilters] = useState({
     precoMin: "",
