@@ -4,7 +4,13 @@ import { GraphQLClient } from "graphql-request";
 import { Car } from "../interfaces/Car";
 
 export const client = new GraphQLClient(
-  `https://${process.env.VERCEL_URL}/api/cars`
+  `https://${process.env.VERCEL_URL}/api/cars`,
+  {
+    headers: {
+      "x-vercel-protection-bypass":
+        process.env.VERCEL_AUTOMATION_BYPASS_SECRET || "",
+    },
+  }
 );
 
 export default async function Home() {
