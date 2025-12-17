@@ -3,7 +3,7 @@ import CarCard from "../components/CarCard";
 import { GraphQLClient } from "graphql-request";
 import { Car } from "../interfaces/Car";
 
-// Revalidar a página a cada 3600 segundos (1 hora)
+// Revalidar a página a cada 30 segundos
 // Durante o build, usa dados vazios. Após deploy, revalida em background
 export const revalidate = 30;
 
