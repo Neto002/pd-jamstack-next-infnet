@@ -1,7 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
 
-export const proxy = (request: NextRequest) => {
-  const session = request.cookies.get("session");
+export function middleware(request: NextRequest) {
+  const session = request.cookies.get("session")?.value;
+
+  const publicPaths = ["/login", "/api", "/_next", "/static"];
+
+  // allow requests to public assets and API to proceed
+  if (publicPaths.some((p) => request.nextUrl.pathname.startsWith(p))) {
+    return NextResponse.next();
+  }
 
   if (
     !session &&
@@ -18,8 +25,8 @@ export const proxy = (request: NextRequest) => {
   }
 
   return NextResponse.next();
-};
+}
 
 export const config = {
-  matcher: ["/:path*", "/login"],
+  matcher: ["/", "/carros", "/sobre", "/contato", "/login"],
 };

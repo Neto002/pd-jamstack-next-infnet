@@ -8,12 +8,16 @@ const LogoutButton: React.FC = () => {
   const handleLogout = async () => {
     await fetch("/api/logout", {
       method: "POST",
+      credentials: "include",
     });
 
     // Disparar evento de mudança de autenticação
-    window.dispatchEvent(new Event("auth-changed"));
+    try {
+      window.dispatchEvent(new Event("auth-changed"));
+    } catch {}
 
-    router.push("/login");
+    // Full reload para garantir estado consistente no servidor
+    window.location.assign("/login");
   };
 
   return (

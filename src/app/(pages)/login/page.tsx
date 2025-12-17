@@ -24,13 +24,18 @@ const LoginPage = () => {
       headers: {
         "Content-Type": "application/json",
       },
+      // garantir que o browser aceite/sete cookies de sessão
+      credentials: "include",
     });
 
     if (response.ok) {
-      // Disparar evento de mudança de autenticação
-      window.dispatchEvent(new Event("auth-changed"));
+      // Disparar evento de mudança de autenticação para atualizações client-side
+      try {
+        window.dispatchEvent(new Event("auth-changed"));
+      } catch {}
 
-      router.push("/");
+      // Fazer reload completo para garantir que o cookie de sessão esteja presente
+      window.location.assign("/");
     } else {
       const data = await response.json();
       setError(data.error || "Erro ao efetuar login.");
