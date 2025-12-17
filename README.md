@@ -76,6 +76,13 @@ npm run build
 npm start
 ```
 
+### 5. Credenciais
+
+É possível acessar o sistema através dessas credenciais, ou se cadastrando:
+
+E-mail: teste@teste.com
+Senha: senha123
+
 ## 📁 Estrutura do Projeto
 
 ```
